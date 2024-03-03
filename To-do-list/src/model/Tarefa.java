@@ -53,7 +53,7 @@ public class Tarefa {
 	
 	@Override
 	public String toString() {
-		return this.nome + "\n Descrição: " + this.descricao;
+		return this.nome + "; Descrição: " + this.descricao + "; " + this.feito;
 	}
 	
 }

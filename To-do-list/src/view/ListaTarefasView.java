@@ -23,7 +23,9 @@ public class ListaTarefasView extends JFrame {
     private JList<String> listaTarefas = new JList<>();
     private JButton btnNovo = new JButton("Nova Tarefa");
     private JButton btnEditar = new JButton("Editar Tarefa");
+    private JButton btnExcluir = new JButton("Excluir Tarefa");
     private JButton btnConcluir = new JButton("Concluir Tarefa");
+    
 
     private List<Tarefa> tarefas = new ArrayList<>();
     private int indiceSelecionado = -1;
@@ -42,12 +44,14 @@ public class ListaTarefasView extends JFrame {
         this.setLayout(null);
         this.btnNovo.setBounds(50, 30, 150, 20);
         this.btnEditar.setBounds(220, 30, 150, 20);
-        this.btnConcluir.setBounds(390, 30, 150, 20);
+        this.btnExcluir.setBounds(390, 30, 150, 20);
+        this.btnConcluir.setBounds(560, 30, 150, 20);
         this.lblLista.setBounds(50, 70, 300, 20);
         this.listaTarefas.setBounds(50, 90, 500, 160);
 
         this.getContentPane().add(btnNovo);
         this.getContentPane().add(btnEditar);
+        this.getContentPane().add(btnExcluir);
         this.getContentPane().add(btnConcluir);
         this.getContentPane().add(lblLista);
         this.getContentPane().add(listaTarefas);
@@ -95,6 +99,29 @@ public class ListaTarefasView extends JFrame {
             }
         });
 
+        btnExcluir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (indiceSelecionado != -1) {
+                    int opcao = JOptionPane.showConfirmDialog(ListaTarefasView.this,
+                            "Tem certeza que deseja excluir esta tarefa?", "Confirmação de exclusão", JOptionPane.YES_NO_OPTION);
+                    if (opcao == JOptionPane.YES_OPTION) {
+                        tarefas.remove(indiceSelecionado);
+                        TarefaDAO dao = new TarefaDAO();
+                        try {
+                            dao.gravarTarefa(tarefas); 
+                            preencherTarefa();
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(ListaTarefasView.this, "Erro ao excluir a tarefa: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(ListaTarefasView.this, "Selecione uma tarefa para excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
+
+        
         btnConcluir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
